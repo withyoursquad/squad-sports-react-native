@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ES2020"],
+    "types": ["react-native", "jest"],
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@squad-sports/core": ["../core/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,8 @@
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+jest.config.*
+tsconfig.json
+.git/
+node_modules/
