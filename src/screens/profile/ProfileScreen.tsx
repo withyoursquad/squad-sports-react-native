@@ -10,9 +10,11 @@ import {
 import { useRoute, useNavigation } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 
+import { useRecoilValue } from 'recoil';
 import type { RootStackParamList } from '../../navigation/SquadNavigator';
 import { useApiClient } from '../../SquadProvider';
 import { useTheme, Colors } from '../../theme/ThemeContext';
+import { featureFlags } from '../../state/features';
 import ScreenHeader from '../../components/ux/layout/ScreenHeader';
 import UserImage from '../../components/ux/user-image/UserImage';
 import Button from '../../components/ux/buttons/Button';
@@ -31,6 +33,7 @@ export function ProfileScreen() {
   const route = useRoute<Route>();
   const navigation = useNavigation();
   const apiClient = useApiClient();
+  const features = useRecoilValue(featureFlags);
   const { theme } = useTheme();
 
   const { userId } = route.params;
@@ -136,14 +139,16 @@ export function ProfileScreen() {
                 Message
               </Text>
             </Button>
-            <Button
-              style={styles.actionButtonOutline}
-              onPress={() =>
-                (navigation as any).navigate('AddCallTitle', { connectionId: userId })
-              }
-            >
-              <Text style={styles.actionButtonOutlineText}>Call</Text>
-            </Button>
+            {features.squadLine && (
+              <Button
+                style={styles.actionButtonOutline}
+                onPress={() =>
+                  (navigation as any).navigate('AddCallTitle', { connectionId: userId })
+                }
+              >
+                <Text style={styles.actionButtonOutlineText}>Call</Text>
+              </Button>
+            )}
           </View>
         )}
       </ScrollView>

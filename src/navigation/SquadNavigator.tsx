@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useRecoilValue } from 'recoil';
 
 import { User } from '@squad-sports/core';
 import { useSquadSDK } from '../SquadProvider';
 import { Colors } from '../theme/ThemeContext';
 import { ScreenErrorBoundary } from '../components/ErrorBoundary';
+import { featureFlags } from '../state/features';
 
 // Auth Screens
 import { LandingScreen } from '../screens/auth/LandingScreen';
@@ -133,6 +135,7 @@ type NavigationState = 'loading' | 'auth' | 'onboarding' | 'main';
 export function SquadNavigator() {
   const sdk = useSquadSDK();
   const [navState, setNavState] = useState<NavigationState>('loading');
+  const features = useRecoilValue(featureFlags);
 
   useEffect(() => {
     const determineRoute = async () => {
@@ -232,12 +235,12 @@ export function SquadNavigator() {
             <Stack.Screen name="BlockedUsers" component={withErrorBoundary(BlockedUsersScreen, 'BlockedUsers')} />
             <Stack.Screen name="DeleteAccount" component={withErrorBoundary(DeleteAccountScreen, 'DeleteAccount')} />
             <Stack.Screen name="Events" component={withErrorBoundary(EventScreen, 'Events')} />
-            <Stack.Screen name="Wallet" component={withErrorBoundary(WalletScreen, 'Wallet')} />
+            {features.wallet && <Stack.Screen name="Wallet" component={withErrorBoundary(WalletScreen, 'Wallet')} />}
             <Stack.Screen name="Messaging" component={withErrorBoundary(MessagingScreen, 'Messaging')} />
             <Stack.Screen name="FreestyleCreate" component={withErrorBoundary(FreestyleCreationScreen, 'FreestyleCreate')} />
             <Stack.Screen name="PollResponse" component={withErrorBoundary(PollResponseScreen, 'PollResponse')} />
             <Stack.Screen name="Invite" component={withErrorBoundary(InviteScreen, 'Invite')} />
-            <Stack.Screen name="AddCallTitle" component={withErrorBoundary(AddCallTitleScreen, 'AddCallTitle')} />
+            {features.squadLine && <Stack.Screen name="AddCallTitle" component={withErrorBoundary(AddCallTitleScreen, 'AddCallTitle')} />}
             <Stack.Screen name="Freestyle" component={withErrorBoundary(FreestyleScreen, 'Freestyle')} />
             <Stack.Screen name="FreestyleListens" component={withErrorBoundary(FreestyleListensScreen, 'FreestyleListens')} />
             <Stack.Screen name="FreestyleReactions" component={withErrorBoundary(FreestyleReactionsScreen, 'FreestyleReactions')} />
@@ -246,17 +249,19 @@ export function SquadNavigator() {
             <Stack.Screen name="PollSummation" component={withErrorBoundary(PollSummationScreen, 'PollSummation')} />
             <Stack.Screen name="InvitationQrCode" component={withErrorBoundary(InvitationQrCodeScreen, 'InvitationQrCode')} />
             <Stack.Screen name="NetworkStatus" component={withErrorBoundary(NetworkStatusScreen, 'NetworkStatus')} />
-            <Stack.Screen
-              name="ActiveCall"
-              component={withErrorBoundary(CallScreen, 'ActiveCall')}
-              options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
-            />
+            {features.squadLine && (
+              <Stack.Screen
+                name="ActiveCall"
+                component={withErrorBoundary(CallScreen, 'ActiveCall')}
+                options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
+              />
+            )}
           </>
         )}
       </Stack.Navigator>
 
-      {/* Global overlay for incoming calls */}
-      <IncomingCallOverlay />
+      {/* Global overlay for incoming calls — only when Squad Line is enabled */}
+      {features.squadLine && <IncomingCallOverlay />}
     </>
   );
 }

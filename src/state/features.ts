@@ -8,12 +8,12 @@ import { atom, selector } from 'recoil';
 export const featureFlags = atom<Record<string, boolean>>({
   key: 'squad-sdk:features:flags',
   default: {
-    squadLine: true,
+    squadLine: false,
     freestyle: true,
     messaging: true,
     polls: true,
     events: true,
-    wallet: true,
+    wallet: false,
   },
 });
 
