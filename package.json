@@ -1,6 +1,6 @@
 {
   "name": "@squad-sports/react-native",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Squad Sports Experience SDK for React Native",
   "main": "src/index.ts",
   "types": "src/index.ts",

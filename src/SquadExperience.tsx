@@ -67,6 +67,9 @@ interface SquadExperienceProps {
   /** User data from host app for seamless partner auth (no login required) */
   userData?: PartnerUserData;
 
+  /** Push notification token (APNs or FCM) for receiving Squad notifications */
+  pushToken?: string;
+
   // --- Full config path ---
 
   /** Full SDK configuration (overrides partnerId if both provided) */
@@ -107,6 +110,7 @@ export function SquadExperience({
   ssoToken,
   ssoProvider,
   userData,
+  pushToken,
   config: configProp,
   onReady,
   onError,
@@ -146,6 +150,13 @@ export function SquadExperience({
         }
 
         const sdk = await SquadSportsSDK.setup(sdkConfig);
+
+        // Register push token if provided
+        if (pushToken) {
+          const platform = require('react-native').Platform.OS === 'ios' ? 'ios' : 'android';
+          sdk.apiClient.updateDeviceInfo(pushToken, platform);
+        }
+
         setResolvedConfig(sdk.config);
         onReady?.();
       } catch (err) {
