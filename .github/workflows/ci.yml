@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Build & Test
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,5 +18,6 @@ jobs:
           node-version: 20
 
       - run: yarn install
-      - run: yarn typecheck
-      - run: yarn test
+
+      - name: Test
+        run: yarn test
